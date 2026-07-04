@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartKitchen AI | Decision Support</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #050505; color: #fff; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    </style>
+</head>
+<body class="p-8">
+
+    <nav class="flex justify-between items-center py-6 px-8 glass mb-8 rounded-2xl mx-auto max-w-6xl mt-4">
+    <div class="font-bold text-xl">SmartKitchen AI</div>
+    <div class="flex gap-6 text-sm text-gray-400">
+        <a href="dashboard.html" class="hover:text-white">Dashboard</a>
+        <a href="inventory_rifqah.html" class="hover:text-white">Inventory</a>
+        <a href="waste_mia.html" class="hover:text-white">Waste</a>
+        <a href="aidecision.html" class="hover:text-white">AI Engine</a>
+        <a href="purchasing.html" class="hover:text-white">Purchasing</a>
+        <a href="reports.html" class="hover:text-white">Reports</a>
+        <a href="settings_mia.html" class="hover:text-white">Settings</a>
+    </div>
+    <a href="index.html" class="text-xs bg-white/10 px-4 py-2 rounded-full hover:bg-white/20">Sign Out</a>
+</nav>
+
+    <div class="max-w-6xl mx-auto">
+        <header class="mb-8">
+            <h1 class="text-3xl font-bold">AI Decision Engine</h1>
+            <p class="text-gray-400">Simulate scenarios to optimize your kitchen performance</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="glass p-6 rounded-3xl h-fit">
+                <h2 class="text-lg font-semibold mb-6">Simulation Controls</h2>
+                <div class="space-y-6">
+                    <div>
+                        <label class="text-xs text-gray-400 uppercase">Tomorrow Weather</label>
+                        <select id="weather" onchange="runSimulation()" class="w-full mt-2 bg-black border border-white/10 p-3 rounded-xl">
+                            <option value="Sunny">Sunny</option>
+                            <option value="Rain">Rain</option>
+                            <option value="Cloudy">Cloudy</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 uppercase">Day Type</label>
+                        <select id="dayType" onchange="runSimulation()" class="w-full mt-2 bg-black border border-white/10 p-3 rounded-xl">
+                            <option value="Weekday">Weekday</option>
+                            <option value="Weekend">Weekend</option>
+                            <option value="Holiday">Public Holiday</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 space-y-8">
+                <div class="glass p-8 rounded-3xl border border-blue-500/20 bg-blue-500/5">
+                    <h2 class="text-xl font-semibold mb-2">🧠 AI Insight</h2>
+                    <p id="aiInsight" class="text-blue-200 text-lg leading-relaxed"></p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="glass p-6 rounded-3xl">
+                        <p class="text-gray-400 text-sm">Predicted Revenue</p>
+                        <h3 id="revenue" class="text-3xl font-bold mt-2">RM 0</h3>
+                    </div>
+                    <div class="glass p-6 rounded-3xl">
+                        <p class="text-gray-400 text-sm">Potential Savings</p>
+                        <h3 id="savings" class="text-3xl font-bold mt-2 text-green-400">RM 0</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function runSimulation() {
+            const weather = document.getElementById('weather').value;
+            const dayType = document.getElementById('dayType').value;
+            
+            // Simulation Logic (Fake AI Model)
+            let revenue = (dayType === 'Weekend' ? 8000 : 4000);
+            if (weather === 'Rain') revenue *= 0.7;
+            
+            const insight = weather === 'Rain' 
+                ? "Rain detected. Coffee demand increases by 18%, while cold drinks drop by 20%. Prepare more hot beverages."
+                : "Sunny conditions projected. High demand for cold drinks and salads. Adjust staffing to peak hours.";
+                
+            document.getElementById('revenue').innerText = `RM ${Math.floor(revenue).toLocaleString()}`;
+            document.getElementById('savings').innerText = `RM ${Math.floor(revenue * 0.15).toLocaleString()}`;
+            document.getElementById('aiInsight').innerText = insight;
+            
+            // Animation for visual effect
+            document.getElementById('revenue').classList.add('animate-pulse');
+            setTimeout(() => document.getElementById('revenue').classList.remove('animate-pulse'), 500);
+        }
+
+        // Initialize on load
+        runSimulation();
+    </script>
+</body>
+</html>

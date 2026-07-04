@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartKitchen AI | Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #050505; color: #fff; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .card-hover:hover { border-color: rgba(59, 130, 246, 0.5); transition: 0.3s; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+    </style>
+</head>
+<body class="p-6 md:p-10">
+
+    <nav class="flex justify-between items-center py-6 px-8 glass mb-8 rounded-2xl mx-auto max-w-6xl mt-4">
+    <div class="font-bold text-xl">SmartKitchen AI</div>
+    <div class="flex gap-6 text-sm text-gray-400">
+        <a href="dashboard.html" class="hover:text-white">Dashboard</a>
+        <a href="inventory_rifqah.html" class="hover:text-white">Inventory</a>
+        <a href="waste_mia.html" class="hover:text-white">Waste</a>
+        <a href="aidecision.html" class="hover:text-white">AI Engine</a>
+        <a href="purchasing.html" class="hover:text-white">Purchasing</a>
+        <a href="reports.html" class="hover:text-white">Reports</a>
+        <a href="settings_mia.html" class="hover:text-white">Settings</a>
+    </div>
+    <a href="index.html" class="text-xs bg-white/10 px-4 py-2 rounded-full hover:bg-white/20">Sign Out</a>
+</nav>
+    <header class="flex justify-between items-center mb-10">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight">Dashboard</h1>
+            <p class="text-gray-400">Welcome back, Head Chef. System is running at optimal capacity.</p>
+        </div>
+        <div class="glass px-4 py-2 rounded-full text-sm flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            System Active
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="glass p-6 rounded-2xl card-hover">
+            <p class="text-gray-400 text-sm">Today's Revenue</p>
+            <h3 class="text-2xl font-semibold mt-1">RM 4,250</h3>
+        </div>
+        <div class="glass p-6 rounded-2xl card-hover">
+            <p class="text-gray-400 text-sm">Food Waste</p>
+            <h3 class="text-2xl font-semibold mt-1">2.4 kg</h3>
+        </div>
+        <div class="glass p-6 rounded-2xl card-hover">
+            <p class="text-gray-400 text-sm">Money Saved</p>
+            <h3 class="text-2xl font-semibold mt-1">RM 890</h3>
+        </div>
+        <div class="glass p-6 rounded-2xl card-hover">
+            <p class="text-gray-400 text-sm">Carbon Saved</p>
+            <h3 class="text-2xl font-semibold mt-1">12 kg</h3>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 glass p-8 rounded-3xl border border-blue-500/20 bg-blue-500/5">
+            <h2 class="text-xl font-semibold mb-4">🚀 AI Strategy Recommendation</h2>
+            <div class="flex gap-6 items-start">
+                <div class="flex-1">
+                    <p class="text-lg font-medium text-blue-300">Reduce "Chicken Rice" prep by 15 servings.</p>
+                    <ul class="mt-4 space-y-2 text-gray-300 text-sm">
+                        <li>• Weather forecast: 90% chance of rain.</li>
+                        <li>• Historical Tuesday demand: 12% lower.</li>
+                        <li>• Potential Savings: <b>RM 125</b>.</li>
+                    </ul>
+                </div>
+                <button class="bg-blue-600 px-6 py-3 rounded-xl font-medium hover:bg-blue-500 transition">Execute</button>
+            </div>
+        </div>
+
+        <div class="glass p-8 rounded-3xl">
+            <h2 class="text-lg font-semibold mb-4">Inventory Alerts</h2>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center bg-white/5 p-3 rounded-lg">
+                    <span>Tomatoes</span>
+                    <span class="text-red-400 text-sm">Low Stock</span>
+                </div>
+                <div class="flex justify-between items-center bg-white/5 p-3 rounded-lg">
+                    <span>Chicken Breast</span>
+                    <span class="text-orange-400 text-sm">Expires 2d</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+        <div class="glass p-8 rounded-3xl">
+            <h2 class="text-lg font-semibold mb-6">7-Day Demand Forecast</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead class="text-gray-400 border-b border-white/10">
+                        <tr><th class="pb-3">Date</th><th class="pb-3">Sales</th><th class="pb-3">Confidence</th></tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5">
+                        <tr><td class="py-4">July 02</td><td>RM 4,500</td><td class="text-green-400">94%</td></tr>
+                        <tr><td class="py-4">July 03</td><td>RM 4,200</td><td class="text-green-400">91%</td></tr>
+                        <tr><td class="py-4">July 04</td><td>RM 5,100</td><td class="text-green-400">96%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="glass p-8 rounded-3xl">
+            <h2 class="text-lg font-semibold mb-6">System Logs</h2>
+            <div class="space-y-6">
+                <div class="flex gap-4">
+                    <div class="w-2 h-2 mt-2 rounded-full bg-blue-500"></div>
+                    <div><p class="text-sm font-medium">Auto-purchase initiated</p><p class="text-xs text-gray-500">2 hours ago</p></div>
+                </div>
+                <div class="flex gap-4">
+                    <div class="w-2 h-2 mt-2 rounded-full bg-purple-500"></div>
+                    <div><p class="text-sm font-medium">Waste prediction updated</p><p class="text-xs text-gray-500">5 hours ago</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Entrance animation for all glass cards
+        document.querySelectorAll('.glass').forEach((el, i) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                el.style.transition = 'all 0.6s ease-out';
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }, i * 100);
+        });
+    </script>
+</body>
+</html>
