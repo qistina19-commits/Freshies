@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartKitchen AI | Inventory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #E8E1D4; color: #fff; }
+        .glass { background: #2E5E4E; backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    </style>
+</head>
+<body class="p-8">
+
+    <div class="max-w-6xl mx-auto">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold">Inventory Management</h1>
+            <button onclick="addDummyItem()" class="bg-black px-6 py-2 rounded-xl text-sm font-medium hover:bg-gray-900 transition">Add Ingredient</button>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="glass p-6 rounded-2xl">
+                <p class="text-gray-400 text-sm">Total Items</p>
+                <h3 class="text-2xl font-bold">142</h3>
+            </div>
+            <div class="glass p-6 rounded-2xl border-l-4 border-red-500">
+                <p class="text-gray-400 text-sm">Low Stock Alerts</p>
+                <h3 class="text-2xl font-bold">4</h3>
+            </div>
+            <div class="glass p-6 rounded-2xl border-l-4 border-yellow-500">
+                <p class="text-gray-400 text-sm">Expiring Soon</p>
+                <h3 class="text-2xl font-bold">12</h3>
+            </div>
+        </div>
+
+        <div class="glass rounded-3xl overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-white/5 text-gray-400 text-sm">
+                    <tr>
+                        <th class="p-6">Ingredient</th>
+                        <th class="p-6">Stock Level</th>
+                        <th class="p-6">Expiry</th>
+                        <th class="p-6">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="inventoryBody" class="divide-y divide-white/5">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+let inventory = JSON.parse(localStorage.getItem('inventory')) || [
+  { name: "Chicken Breast", stock: 12, min: 20, expiry: "2026-07-05", cat: "Meat" },
+  { name: "Organic Flour", stock: 85, min: 20, expiry: "2027-01-03", cat: "Dry" }
+];
+
+function renderInventory() {
+  const body = document.getElementById('inventoryBody');
+
+  body.innerHTML = inventory.map((item, index) => `
+    <tr class="hover:bg-white/5 transition">
+      <td class="p-6 font-medium">${item.name}</td>
+
+      <td class="p-6">
+        <div class="w-32 bg-black rounded-full h-2">
+          <div 
+            class="${item.stock < item.min ? 'bg-red-500' : 'bg-blue-500'} h-2 rounded-full" 
+            style="width: ${Math.min(item.stock, 100)}%">
+          </div>
+        </div>
+        <span class="text-xs text-gray-400">${item.stock} units</span>
+      </td>
+
+      <td class="p-6">${item.expiry}</td>
+
+      <td class="p-6 flex gap-3">
+        <button onclick="deductStock(${index})" class="text-yellow-400 hover:text-yellow-300">
+          Deduct
+        </button>
+
+        <button onclick="deleteItem(${index})" class="text-red-400 hover:text-red-300">
+          Delete
+        </button>
+      </td>
+    </tr>
+  `).join('');
+
+  localStorage.setItem('inventory', JSON.stringify(inventory));
+}
+
+function addDummyItem() {
+  const name = prompt("Enter ingredient name:");
+  if (!name) return;
+
+  const stock = Number(prompt("Enter stock amount:"));
+  if (isNaN(stock) || stock < 0) {
+    alert("Please enter a valid stock amount.");
+    return;
+  }
+
+  const min = Number(prompt("Enter minimum stock alert amount:"));
+  if (isNaN(min) || min < 0) {
+    alert("Please enter a valid minimum stock amount.");
+    return;
+  }
+
+  const expiry = prompt("Enter expiry duration, for example: 2 days, 1 week, 6 months");
+  if (!expiry) return;
+
+  inventory.push({
+    name,
+    stock,
+    min,
+    expiry,
+    cat: "Custom"
+  });
+
+  renderInventory();
+}
+
+function deductStock(index) {
+  const amount = Number(prompt(`How many units of ${inventory[index].name} did you use?`));
+
+  if (isNaN(amount) || amount <= 0) {
+    alert("Please enter a valid amount.");
+    return;
+  }
+
+  if (amount > inventory[index].stock) {
+    alert("You cannot deduct more than the current stock.");
+    return;
+  }
+
+  inventory[index].stock -= amount;
+  renderInventory();
+}
+
+function deleteItem(index) {
+  inventory.splice(index, 1);
+  renderInventory();
+}
+
+renderInventory();
+</script>
+</body>
+</html>
