@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartKitchen AI | AI Purchasing Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #2e5e4e; color: #1f1f1f; }
+        .glass { background: rgba(245, 238, 226, 0.95); color: #1f1f1f; backdrop-filter: blur(12px); border: 1px solid rgba(196, 162, 131, 0.4); }
+        .row-hover:hover { background: rgba(220, 210, 195, 0.95); }
+    </style>
+</head>
+<body class="p-8">
+
+   
+
+    <div id="pdf-content" class="max-w-6xl mx-auto">
+        <header class="flex justify-between items-end mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-white">Purchasing Assistant</h1>
+                <p class="text-slate-100">AI-optimized procurement based on 7-day demand.</p>
+            </div>
+            <button id="exportPdf" class="bg-white text-black px-6 py-2 rounded-xl font-medium hover:bg-gray-200">Export PDF</button>
+        </header>
+
+        <div class="glass rounded-3xl overflow-hidden mb-8">
+            <table class="w-full text-left">
+                <thead class="bg-white/5 text-gray-400 text-sm">
+                    <tr>
+                        <th class="p-6">Ingredient</th>
+                        <th class="p-6">Urgency</th>
+                        <th class="p-6">Est. Cost</th>
+                        <th class="p-6">AI Rationale</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                    <tr class="row-hover">
+                        <td class="p-6 font-medium">Organic Tomatoes</td>
+                        <td class="p-6"><span class="px-3 py-1 rounded-full bg-red-500/20 text-red-500 text-xs">High</span></td>
+                        <td class="p-6">RM 145</td>
+                        <td class="p-6 text-sm text-slate-700">Stock low + weekend demand peak expected.</td>
+                    </tr>
+                    <tr class="row-hover">
+                        <td class="p-6 font-medium">Whole Chicken</td>
+                        <td class="p-6"><span class="px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-600 text-xs">Medium</span></td>
+                        <td class="p-6">RM 320</td>
+                        <td class="p-6 text-sm text-slate-700">Standard replenishment for recurring Tuesday volume.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="glass p-8 rounded-3xl">
+                <h3 class="text-xl font-semibold mb-4">Procurement Summary</h3>
+                <div class="flex justify-between py-2 border-b border-white/10">
+                    <span class="text-gray-400">Total Estimated Cost</span>
+                    <span class="font-bold">RM 465</span>
+                </div>
+                <div class="flex justify-between py-2">
+                    <span class="text-gray-400">AI Projected Savings</span>
+                    <span class="text-green-400 font-bold">RM 82</span>
+                </div>
+            </div>
+            <button class="glass p-8 rounded-3xl flex flex-col items-center justify-center hover:bg-white/5 transition border-dashed border-2 border-white/20">
+                <span class="text-2xl font-bold">Generate Purchase List</span>
+                <span class="text-gray-400 mt-2">Send to Suppliers</span>
+            </button>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-YcsIP3MhyzLkV/2Vu8PvhA5Y6g3pOyowJ9kDPsLVQF+lEtXEa57EGPM5k7BjaLhBRfWwXZ5XsG9Y9YbWv4y2mw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        document.getElementById('exportPdf').addEventListener('click', function () {
+            const element = document.getElementById('pdf-content');
+            const opt = {
+                margin: 0.5,
+                filename: 'purchasing-assistant.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        });
+    </script>
+</body>
+</html>

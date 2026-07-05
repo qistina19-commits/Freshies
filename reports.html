@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartKitchen AI | Executive Reports</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #2e5e4e; color: #fff; }
+        .glass { background: rgba(245, 238, 226, 0.95); color: #1f1f1f; backdrop-filter: blur(12px); border: 1px solid rgba(196, 162, 131, 0.4); }
+    </style>
+</head>
+<body class="p-8">
+
+
+    <div class="max-w-6xl mx-auto">
+        <header class="flex justify-between items-center mb-10">
+            <div>
+                <h1 class="text-3xl font-bold">Executive Reports</h1>
+                <p class="text-gray-400">Monthly performance analytics and sustainability impact.</p>
+            </div>
+            <div class="flex gap-3">
+                <button class="bg-white/5 px-4 py-2 rounded-xl text-sm border border-white/10 hover:bg-white/10">Print</button>
+                <button class="bg-blue-600 px-4 py-2 rounded-xl text-sm hover:bg-blue-500">Export PDF</button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+            <div class="glass p-6 rounded-2xl">
+                <p class="text-gray-400 text-xs uppercase tracking-wider">Total Revenue</p>
+                <h3 class="text-2xl font-bold mt-1">RM 124,500</h3>
+            </div>
+            <div class="glass p-6 rounded-2xl">
+                <p class="text-gray-400 text-xs uppercase tracking-wider">Food Saved</p>
+                <h3 class="text-2xl font-bold mt-1">450 kg</h3>
+            </div>
+            <div class="glass p-6 rounded-2xl">
+                <p class="text-gray-400 text-xs uppercase tracking-wider">Carbon Offset</p>
+                <h3 class="text-2xl font-bold mt-1">82 kg</h3>
+            </div>
+            <div class="glass p-6 rounded-2xl">
+                <p class="text-gray-400 text-xs uppercase tracking-wider">AI Accuracy</p>
+                <h3 class="text-2xl font-bold mt-1">94.2%</h3>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="glass p-8 rounded-3xl h-64 flex flex-col justify-center items-center">
+                <p class="text-gray-500 italic">Revenue Trend Chart (Data Integration Ready)</p>
+            </div>
+            <div class="glass p-8 rounded-3xl h-64 flex flex-col justify-center items-center">
+                <p class="text-gray-500 italic">Waste vs Savings Trend Chart</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+            <div class="glass p-6 rounded-3xl">
+                <h3 class="font-semibold mb-4">Top Selling Items</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between"><span>Signature Burger</span> <span class="text-gray-400">1,240 sold</span></div>
+                    <div class="flex justify-between"><span>Chicken Rice</span> <span class="text-gray-400">980 sold</span></div>
+                </div>
+            </div>
+            <div class="glass p-6 rounded-3xl">
+                <h3 class="font-semibold mb-4">Most Wasted Items</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between"><span>Fresh Salad</span> <span class="text-red-400">42 kg wasted</span></div>
+                    <div class="flex justify-between"><span>White Bread</span> <span class="text-red-400">38 kg wasted</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
