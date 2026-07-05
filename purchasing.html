@@ -14,8 +14,6 @@
 </head>
 <body class="p-8">
 
-   
-
     <div id="pdf-content" class="max-w-6xl mx-auto">
         <header class="flex justify-between items-end mb-8">
             <div>
@@ -35,19 +33,8 @@
                         <th class="p-6">AI Rationale</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-white/5">
-                    <tr class="row-hover">
-                        <td class="p-6 font-medium">Organic Tomatoes</td>
-                        <td class="p-6"><span class="px-3 py-1 rounded-full bg-red-500/20 text-red-500 text-xs">High</span></td>
-                        <td class="p-6">RM 145</td>
-                        <td class="p-6 text-sm text-slate-700">Stock low + weekend demand peak expected.</td>
-                    </tr>
-                    <tr class="row-hover">
-                        <td class="p-6 font-medium">Whole Chicken</td>
-                        <td class="p-6"><span class="px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-600 text-xs">Medium</span></td>
-                        <td class="p-6">RM 320</td>
-                        <td class="p-6 text-sm text-slate-700">Standard replenishment for recurring Tuesday volume.</td>
-                    </tr>
+                <tbody id="purchaseTableBody" class="divide-y divide-white/5">
+                    <!-- Rows will be inserted here dynamically -->
                 </tbody>
             </table>
         </div>
@@ -57,21 +44,85 @@
                 <h3 class="text-xl font-semibold mb-4">Procurement Summary</h3>
                 <div class="flex justify-between py-2 border-b border-white/10">
                     <span class="text-gray-400">Total Estimated Cost</span>
-                    <span class="font-bold">RM 465</span>
+                    <span class="font-bold" id="totalCost">RM 0</span>
                 </div>
                 <div class="flex justify-between py-2">
                     <span class="text-gray-400">AI Projected Savings</span>
-                    <span class="text-green-400 font-bold">RM 82</span>
+                    <span class="text-green-400 font-bold" id="totalSavings">RM 0</span>
                 </div>
             </div>
-            <button class="glass p-8 rounded-3xl flex flex-col items-center justify-center hover:bg-white/5 transition border-dashed border-2 border-white/20">
+            <button id="generatePurchaseBtn" class="glass p-8 rounded-3xl flex flex-col items-center justify-center hover:bg-white/5 transition border-dashed border-2 border-white/20">
                 <span class="text-2xl font-bold">Generate Purchase List</span>
                 <span class="text-gray-400 mt-2">Send to Suppliers</span>
             </button>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-YcsIP3MhyzLkV/2Vu8PvhA5Y6g3pOyowJ9kDPsLVQF+lEtXEa57EGPM5k7BjaLhBRfWwXZ5XsG9Y9YbWv4y2mw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
+        // Data structure for purchasing items
+        let purchasingData = {
+            items: [
+                {
+                    ingredient: 'Organic Tomatoes',
+                    urgency: 'High',
+                    cost: 145,
+                    rationale: 'Stock low + weekend demand peak expected.'
+                },
+                {
+                    ingredient: 'Whole Chicken',
+                    urgency: 'Medium',
+                    cost: 320,
+                    rationale: 'Standard replenishment for recurring Tuesday volume.'
+                }
+            ],
+            projectedSavings: 82
+        };
+
+        // Function to get urgency badge color
+        function getUrgencyColor(urgency) {
+            const colors = {
+                'High': 'bg-red-500/20 text-red-500',
+                'Medium': 'bg-yellow-500/20 text-yellow-600',
+                'Low': 'bg-green-500/20 text-green-500'
+            };
+            return colors[urgency] || colors['Medium'];
+        }
+
+        // Function to render the table
+        function renderTable(data) {
+            const tbody = document.getElementById('purchaseTableBody');
+            tbody.innerHTML = '';
+
+            data.items.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = 'row-hover';
+                row.innerHTML = `
+                    <td class="p-6 font-medium">${item.ingredient}</td>
+                    <td class="p-6"><span class="px-3 py-1 rounded-full ${getUrgencyColor(item.urgency)} text-xs">${item.urgency}</span></td>
+                    <td class="p-6">RM ${item.cost}</td>
+                    <td class="p-6 text-sm text-slate-700">${item.rationale}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            updateSummary(data);
+        }
+
+        // Function to update the summary
+        function updateSummary(data) {
+            const totalCost = data.items.reduce((sum, item) => sum + item.cost, 0);
+            document.getElementById('totalCost').textContent = `RM ${totalCost}`;
+            document.getElementById('totalSavings').textContent = `RM ${data.projectedSavings}`;
+        }
+
+        // Function to update data from external source
+        function updatePurchasingData(newData) {
+            purchasingData = newData;
+            renderTable(purchasingData);
+        }
+
+        // Export PDF function
         document.getElementById('exportPdf').addEventListener('click', function () {
             const element = document.getElementById('pdf-content');
             const opt = {
@@ -83,6 +134,33 @@
             };
             html2pdf().set(opt).from(element).save();
         });
+
+        // Generate Purchase List button
+        document.getElementById('generatePurchaseBtn').addEventListener('click', function () {
+            console.log('Generating purchase list...');
+            console.log(purchasingData);
+            // Add your logic to send data to suppliers here
+        });
+
+        // Initialize the page with default data
+        renderTable(purchasingData);
+
+        // Example: Fetch data from API (uncomment and modify with your backend URL)
+        /*
+        async function fetchPurchasingData() {
+            try {
+                const response = await fetch('/api/purchasing-data');
+                const data = await response.json();
+                updatePurchasingData(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Call this when the page loads or set up auto-refresh
+        window.addEventListener('load', fetchPurchasingData);
+        */
+
     </script>
 </body>
 </html>
