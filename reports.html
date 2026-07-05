@@ -6,6 +6,7 @@
     <title>SmartKitchen AI | Executive Reports</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
         body { font-family: 'Inter', sans-serif; background: #2e5e4e; color: #fff; }
@@ -15,6 +16,10 @@
         .status-indicator { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
         .status-live { background: #10b981; animation: blink 1.5s infinite; }
         @keyframes blink { 0%, 49%, 100% { opacity: 1; } 50%, 99% { opacity: 0.5; } }
+        @media print {
+            body { background: white; }
+            .glass { background: white; border: 1px solid #e5e7eb; }
+        }
     </style>
 </head>
 <body class="p-8">
@@ -33,51 +38,53 @@
             </div>
         </header>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-            <div class="glass p-6 rounded-2xl">
-                <p class="text-gray-400 text-xs uppercase tracking-wider">Total Revenue</p>
-                <h3 class="text-2xl font-bold mt-1" id="totalRevenue">RM 124,500</h3>
-                <p class="text-xs text-gray-500 mt-2" id="revenueChange">↑ 5.2%</p>
-            </div>
-            <div class="glass p-6 rounded-2xl">
-                <p class="text-gray-400 text-xs uppercase tracking-wider">Food Saved</p>
-                <h3 class="text-2xl font-bold mt-1" id="foodSaved">450 kg</h3>
-                <p class="text-xs text-gray-500 mt-2" id="foodChange">↑ 12 kg today</p>
-            </div>
-            <div class="glass p-6 rounded-2xl">
-                <p class="text-gray-400 text-xs uppercase tracking-wider">Carbon Offset</p>
-                <h3 class="text-2xl font-bold mt-1" id="carbonOffset">82 kg</h3>
-                <p class="text-xs text-gray-500 mt-2" id="carbonChange">↑ 2.1 kg today</p>
-            </div>
-            <div class="glass p-6 rounded-2xl">
-                <p class="text-gray-400 text-xs uppercase tracking-wider">AI Accuracy</p>
-                <h3 class="text-2xl font-bold mt-1" id="aiAccuracy">94.2%</h3>
-                <p class="text-xs text-gray-500 mt-2" id="accuracyChange">Stable</p>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div class="glass p-8 rounded-3xl h-64">
-                <canvas id="revenueChart"></canvas>
-            </div>
-            <div class="glass p-8 rounded-3xl h-64">
-                <canvas id="wasteChart"></canvas>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-            <div class="glass p-6 rounded-3xl">
-                <h3 class="font-semibold mb-4">Top Selling Items</h3>
-                <div class="space-y-4" id="topSellingList">
-                    <div class="flex justify-between"><span>Signature Burger</span> <span class="text-gray-400">1,240 sold</span></div>
-                    <div class="flex justify-between"><span>Chicken Rice</span> <span class="text-gray-400">980 sold</span></div>
+        <div id="reportContent">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                <div class="glass p-6 rounded-2xl">
+                    <p class="text-gray-400 text-xs uppercase tracking-wider">Total Revenue</p>
+                    <h3 class="text-2xl font-bold mt-1" id="totalRevenue">RM 124,500</h3>
+                    <p class="text-xs text-gray-500 mt-2" id="revenueChange">↑ 5.2%</p>
+                </div>
+                <div class="glass p-6 rounded-2xl">
+                    <p class="text-gray-400 text-xs uppercase tracking-wider">Food Saved</p>
+                    <h3 class="text-2xl font-bold mt-1" id="foodSaved">450 kg</h3>
+                    <p class="text-xs text-gray-500 mt-2" id="foodChange">↑ 12 kg today</p>
+                </div>
+                <div class="glass p-6 rounded-2xl">
+                    <p class="text-gray-400 text-xs uppercase tracking-wider">Carbon Offset</p>
+                    <h3 class="text-2xl font-bold mt-1" id="carbonOffset">82 kg</h3>
+                    <p class="text-xs text-gray-500 mt-2" id="carbonChange">↑ 2.1 kg today</p>
+                </div>
+                <div class="glass p-6 rounded-2xl">
+                    <p class="text-gray-400 text-xs uppercase tracking-wider">AI Accuracy</p>
+                    <h3 class="text-2xl font-bold mt-1" id="aiAccuracy">94.2%</h3>
+                    <p class="text-xs text-gray-500 mt-2" id="accuracyChange">Stable</p>
                 </div>
             </div>
-            <div class="glass p-6 rounded-3xl">
-                <h3 class="font-semibold mb-4">Most Wasted Items</h3>
-                <div class="space-y-4" id="wastedItemsList">
-                    <div class="flex justify-between"><span>Fresh Salad</span> <span class="text-red-400">42 kg wasted</span></div>
-                    <div class="flex justify-between"><span>White Bread</span> <span class="text-red-400">38 kg wasted</span></div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="glass p-8 rounded-3xl h-64">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+                <div class="glass p-8 rounded-3xl h-64">
+                    <canvas id="wasteChart"></canvas>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                <div class="glass p-6 rounded-3xl">
+                    <h3 class="font-semibold mb-4">Top Selling Items</h3>
+                    <div class="space-y-4" id="topSellingList">
+                        <div class="flex justify-between"><span>Signature Burger</span> <span class="text-gray-400">1,240 sold</span></div>
+                        <div class="flex justify-between"><span>Chicken Rice</span> <span class="text-gray-400">980 sold</span></div>
+                    </div>
+                </div>
+                <div class="glass p-6 rounded-3xl">
+                    <h3 class="font-semibold mb-4">Most Wasted Items</h3>
+                    <div class="space-y-4" id="wastedItemsList">
+                        <div class="flex justify-between"><span>Fresh Salad</span> <span class="text-red-400">42 kg wasted</span></div>
+                        <div class="flex justify-between"><span>White Bread</span> <span class="text-red-400">38 kg wasted</span></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -262,7 +269,30 @@
 
         // Export PDF functionality
         function exportPDF() {
-            alert('PDF export feature coming soon! Integrating with jsPDF library.');
+            const element = document.getElementById('reportContent');
+            const opt = {
+                margin: 10,
+                filename: `SmartKitchen_Report_${new Date().toISOString().slice(0, 10)}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+            };
+
+            // Show loading state
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = 'Generating PDF...';
+            btn.disabled = true;
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }).catch(error => {
+                console.error('PDF export error:', error);
+                alert('Error generating PDF. Please try again.');
+                btn.textContent = originalText;
+                btn.disabled = false;
+            });
         }
 
         // Initialize on page load
