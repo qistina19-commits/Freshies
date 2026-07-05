@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartKitchen AI | Food Waste</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #E8E1D4; color: #fff; }
+        .glass { background:#2E5E4E; backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.08
+); }
+    </style>
+</head>
+<body class="p-8">
+
+   
+
+    <div class="max-w-6xl mx-auto">
+        <header class="mb-8">
+            <h1 class="text-3xl font-bold">Waste Management</h1>
+            <p class="text-black">Track and optimize resource consumption</p>
+        </header>
+
+        <div class="glass p-6 rounded-3xl border border-red-500/40 bg-red-600/50 mb-8 backdrop-blur-md">
+    <h2 class="text-lg font-semibold text-red-200 mb-2">⚠️ AI Waste Alert</h2>
+    <p class="text-white font-medium">Burger waste increased by 18% this week.</p>
+    <p class="text-sm text-red-100 mt-2">Recommendation: Reduce prep by 8 servings to save <b>RM 65</b> per day.</p>
+</div>
+
+        <div class="glass p-6 rounded-3xl mb-8">
+            <h3 class="text-lg font-semibold mb-4">Record New Waste</h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <input id="foodName" type="text" placeholder="Food Item" class="bg-white/5 border border-white/10 p-3 rounded-xl">
+                <input id="quantity" type="number" placeholder="Quantity (kg)" class="bg-white/5 border border-white/10 p-3 rounded-xl">
+                <select id="reason" class="bg-white/5 border border-white/10 p-3 rounded-xl">
+                    <option>Spoilage</option>
+                    <option>Over-prep</option>
+                    <option>Customer Return</option>
+                </select>
+                <button onclick="recordWaste()" class="bg-white text-black font-semibold rounded-xl hover:bg-gray-200">Record</button>
+            </div>
+        </div>
+
+        <div class="glass rounded-3xl overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-white/5 text-gray-400 text-sm">
+                    <tr>
+                        <th class="p-6">Item</th>
+                        <th class="p-6">Quantity</th>
+                        <th class="p-6">Reason</th>
+                        <th class="p-6">Est. Cost</th>
+                    </tr>
+                </thead>
+                <tbody id="wasteBody" class="divide-y divide-white/5"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let wasteLogs = JSON.parse(localStorage.getItem('wasteData')) || [];
+
+        function recordWaste() {
+            const name = document.getElementById('foodName').value;
+            const qty = document.getElementById('quantity').value;
+            const reason = document.getElementById('reason').value;
+            
+            if(!name || !qty) return;
+
+            wasteLogs.unshift({ name, qty, reason, cost: (qty * 12.5).toFixed(2) });
+            localStorage.setItem('wasteData', JSON.stringify(wasteLogs));
+            renderWaste();
+        }
+
+        function renderWaste() {
+            const body = document.getElementById('wasteBody');
+            body.innerHTML = wasteLogs.map(item => `
+                <tr class="hover:bg-white/5">
+                    <td class="p-6">${item.name}</td>
+                    <td class="p-6">${item.qty} kg</td>
+                    <td class="p-6">${item.reason}</td>
+                    <td class="p-6">RM ${item.cost}</td>
+                </tr>
+            `).join('');
+        }
+
+        renderWaste();
+    </script>
+</body>
+</html>
