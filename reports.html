@@ -5,71 +5,282 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartKitchen AI | Executive Reports</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
         body { font-family: 'Inter', sans-serif; background: #2e5e4e; color: #fff; }
         .glass { background: rgba(245, 238, 226, 0.95); color: #1f1f1f; backdrop-filter: blur(12px); border: 1px solid rgba(196, 162, 131, 0.4); }
+        .pulse { animation: pulse-animation 2s infinite; }
+        @keyframes pulse-animation { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        .status-indicator { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+        .status-live { background: #10b981; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 49%, 100% { opacity: 1; } 50%, 99% { opacity: 0.5; } }
     </style>
 </head>
 <body class="p-8">
-
-
     <div class="max-w-6xl mx-auto">
         <header class="flex justify-between items-center mb-10">
             <div>
                 <h1 class="text-3xl font-bold">Executive Reports</h1>
-                <p class="text-gray-400">Monthly performance analytics and sustainability impact.</p>
+                <p class="text-gray-400">
+                    <span class="status-indicator status-live"></span>
+                    <span>Real-time performance analytics and sustainability impact.</span>
+                </p>
             </div>
             <div class="flex gap-3">
-                <button class="bg-white/5 px-4 py-2 rounded-xl text-sm border border-white/10 hover:bg-white/10">Print</button>
-                <button class="bg-blue-600 px-4 py-2 rounded-xl text-sm hover:bg-blue-500">Export PDF</button>
+                <button class="bg-white/5 px-4 py-2 rounded-xl text-sm border border-white/10 hover:bg-white/10" onclick="printReport()">Print</button>
+                <button class="bg-blue-600 px-4 py-2 rounded-xl text-sm hover:bg-blue-500" onclick="exportPDF()">Export PDF</button>
             </div>
         </header>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
             <div class="glass p-6 rounded-2xl">
                 <p class="text-gray-400 text-xs uppercase tracking-wider">Total Revenue</p>
-                <h3 class="text-2xl font-bold mt-1">RM 124,500</h3>
+                <h3 class="text-2xl font-bold mt-1" id="totalRevenue">RM 124,500</h3>
+                <p class="text-xs text-gray-500 mt-2" id="revenueChange">↑ 5.2%</p>
             </div>
             <div class="glass p-6 rounded-2xl">
                 <p class="text-gray-400 text-xs uppercase tracking-wider">Food Saved</p>
-                <h3 class="text-2xl font-bold mt-1">450 kg</h3>
+                <h3 class="text-2xl font-bold mt-1" id="foodSaved">450 kg</h3>
+                <p class="text-xs text-gray-500 mt-2" id="foodChange">↑ 12 kg today</p>
             </div>
             <div class="glass p-6 rounded-2xl">
                 <p class="text-gray-400 text-xs uppercase tracking-wider">Carbon Offset</p>
-                <h3 class="text-2xl font-bold mt-1">82 kg</h3>
+                <h3 class="text-2xl font-bold mt-1" id="carbonOffset">82 kg</h3>
+                <p class="text-xs text-gray-500 mt-2" id="carbonChange">↑ 2.1 kg today</p>
             </div>
             <div class="glass p-6 rounded-2xl">
                 <p class="text-gray-400 text-xs uppercase tracking-wider">AI Accuracy</p>
-                <h3 class="text-2xl font-bold mt-1">94.2%</h3>
+                <h3 class="text-2xl font-bold mt-1" id="aiAccuracy">94.2%</h3>
+                <p class="text-xs text-gray-500 mt-2" id="accuracyChange">Stable</p>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div class="glass p-8 rounded-3xl h-64 flex flex-col justify-center items-center">
-                <p class="text-gray-500 italic">Revenue Trend Chart (Data Integration Ready)</p>
+            <div class="glass p-8 rounded-3xl h-64">
+                <canvas id="revenueChart"></canvas>
             </div>
-            <div class="glass p-8 rounded-3xl h-64 flex flex-col justify-center items-center">
-                <p class="text-gray-500 italic">Waste vs Savings Trend Chart</p>
+            <div class="glass p-8 rounded-3xl h-64">
+                <canvas id="wasteChart"></canvas>
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
             <div class="glass p-6 rounded-3xl">
                 <h3 class="font-semibold mb-4">Top Selling Items</h3>
-                <div class="space-y-4">
+                <div class="space-y-4" id="topSellingList">
                     <div class="flex justify-between"><span>Signature Burger</span> <span class="text-gray-400">1,240 sold</span></div>
                     <div class="flex justify-between"><span>Chicken Rice</span> <span class="text-gray-400">980 sold</span></div>
                 </div>
             </div>
             <div class="glass p-6 rounded-3xl">
                 <h3 class="font-semibold mb-4">Most Wasted Items</h3>
-                <div class="space-y-4">
+                <div class="space-y-4" id="wastedItemsList">
                     <div class="flex justify-between"><span>Fresh Salad</span> <span class="text-red-400">42 kg wasted</span></div>
                     <div class="flex justify-between"><span>White Bread</span> <span class="text-red-400">38 kg wasted</span></div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        // Real-time data management
+        let revenueChart, wasteChart;
+        let chartData = {
+            revenue: [12450, 15320, 14200, 16800, 18900, 19500, 21400, 22300, 24100, 25400, 26800, 28100],
+            waste: [420, 385, 410, 375, 350, 320, 310, 290, 280, 265, 250, 220],
+            months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        };
+
+        // Initialize real-time WebSocket connection (fallback to polling if WebSocket unavailable)
+        function initRealTimeUpdates() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const ws = new WebSocket(`${protocol}//localhost:8080/reports`);
+
+            ws.onopen = () => console.log('WebSocket connected');
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                updateDashboard(data);
+            };
+            ws.onerror = () => {
+                console.log('WebSocket unavailable, using polling');
+                pollDataUpdates();
+            };
+            ws.onclose = () => {
+                setTimeout(initRealTimeUpdates, 3000);
+            };
+        }
+
+        // Polling fallback (updates every 3 seconds)
+        function pollDataUpdates() {
+            setInterval(async () => {
+                try {
+                    const response = await fetch('/api/reports');
+                    if (response.ok) {
+                        const data = await response.json();
+                        updateDashboard(data);
+                    }
+                } catch (error) {
+                    console.log('Polling error:', error);
+                }
+            }, 3000);
+        }
+
+        // Update dashboard with new data
+        function updateDashboard(data) {
+            // Update KPI metrics with animation
+            animateUpdate('totalRevenue', `RM ${formatNumber(data.totalRevenue || 124500)}`);
+            animateUpdate('foodSaved', `${data.foodSaved || 450} kg`);
+            animateUpdate('carbonOffset', `${data.carbonOffset || 82} kg`);
+            animateUpdate('aiAccuracy', `${data.aiAccuracy || 94.2}%`);
+
+            // Update change indicators
+            document.getElementById('revenueChange').textContent = data.revenueChange || '↑ 5.2%';
+            document.getElementById('foodChange').textContent = data.foodChange || '↑ 12 kg today';
+            document.getElementById('carbonChange').textContent = data.carbonChange || '↑ 2.1 kg today';
+            document.getElementById('accuracyChange').textContent = data.accuracyChange || 'Stable';
+
+            // Update lists
+            if (data.topItems) updateItemList('topSellingList', data.topItems, 'sold');
+            if (data.wastedItems) updateItemList('wastedItemsList', data.wastedItems, 'wasted');
+
+            // Update charts with new data
+            if (data.chartData) {
+                chartData = data.chartData;
+                updateCharts();
+            }
+        }
+
+        // Animate number changes
+        function animateUpdate(elementId, newValue) {
+            const element = document.getElementById(elementId);
+            element.classList.add('pulse');
+            element.textContent = newValue;
+            setTimeout(() => element.classList.remove('pulse'), 600);
+        }
+
+        // Format large numbers
+        function formatNumber(num) {
+            return num.toLocaleString('en-MY');
+        }
+
+        // Update item lists dynamically
+        function updateItemList(containerId, items, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            items.forEach(item => {
+                const colorClass = type === 'wasted' ? 'text-red-400' : 'text-gray-400';
+                const displayText = type === 'sold' ? `${item.quantity} sold` : `${item.quantity} kg wasted`;
+                const div = document.createElement('div');
+                div.className = 'flex justify-between animate-fadeIn';
+                div.innerHTML = `<span>${item.name}</span> <span class="${colorClass}">${displayText}</span>`;
+                container.appendChild(div);
+            });
+        }
+
+        // Initialize charts
+        function initCharts() {
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            revenueChart = new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: chartData.months,
+                    datasets: [{
+                        label: 'Monthly Revenue (RM)',
+                        data: chartData.revenue,
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#2563eb'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            ticks: { color: '#6b7280' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        x: { ticks: { color: '#6b7280' } }
+                    }
+                }
+            });
+
+            const wasteCtx = document.getElementById('wasteChart').getContext('2d');
+            wasteChart = new Chart(wasteCtx, {
+                type: 'line',
+                data: {
+                    labels: chartData.months,
+                    datasets: [{
+                        label: 'Food Waste (kg)',
+                        data: chartData.waste,
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#ef4444'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            ticks: { color: '#6b7280' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        x: { ticks: { color: '#6b7280' } }
+                    }
+                }
+            });
+        }
+
+        // Update charts with new data
+        function updateCharts() {
+            if (revenueChart) {
+                revenueChart.data.datasets[0].data = chartData.revenue;
+                revenueChart.update('none');
+            }
+            if (wasteChart) {
+                wasteChart.data.datasets[0].data = chartData.waste;
+                wasteChart.update('none');
+            }
+        }
+
+        // Print functionality
+        function printReport() {
+            window.print();
+        }
+
+        // Export PDF functionality
+        function exportPDF() {
+            alert('PDF export feature coming soon! Integrating with jsPDF library.');
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            initRealTimeUpdates();
+        });
+
+        // Add fade-in animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .animate-fadeIn { animation: fadeIn 0.3s ease-in; }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
