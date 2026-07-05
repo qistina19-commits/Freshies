@@ -38,5 +38,28 @@
             </button>
         </form>
     </div>
+    <script>
+        
+    const loginForm = document.getElementById('loginForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const card = document.getElementById('loginCard');
+
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitBtn.textContent = 'Authenticating...';
+        submitBtn.style.opacity = '0.5';
+
+        // Fake authentication delay
+        setTimeout(() => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                // --- THIS IS THE UPDATED LINE ---
+                window.location.href = "dashboard.html"; 
+                // --------------------------------
+            }, 500);
+        }, 1500);
+    });
+    </script>
 </body>
 </html>
