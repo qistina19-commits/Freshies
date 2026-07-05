@@ -7,8 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background: #050505; color: #fff; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        body { font-family: 'Inter', sans-serif; background: #2E5E4E; color: #fff; }
+        .glass { background: #7a9e7e; backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .card-hover:hover { border-color: rgba(59, 130, 246, 0.5); transition: 0.3s; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
@@ -18,7 +18,7 @@
 
    <nav class="flex justify-between items-center py-6 px-8 glass mb-8 rounded-2xl mx-auto max-w-6xl mt-4">
     <div class="font-bold text-xl">SmartKitchen AI</div>
-    <div class="flex gap-6 text-sm text-gray-400">
+    <div class="flex gap-6 text-sm">
         <a href="dashboard.html" class="hover:text-white">Dashboard</a>
         <a href="inventory.html" class="hover:text-white">Inventory</a>
         <a href="waste.html" class="hover:text-white">Waste</a>
@@ -32,7 +32,7 @@
     <header class="flex justify-between items-center mb-10">
         <div>
             <h1 class="text-3xl font-bold tracking-tight">Dashboard</h1>
-            <p class="text-gray-400">Welcome back, Head Chef. System is running at optimal capacity.</p>
+            <p>Welcome back, Head Chef. System is running at optimal capacity.</p>
         </div>
         <div class="glass px-4 py-2 rounded-full text-sm flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
@@ -42,19 +42,19 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div class="glass p-6 rounded-2xl card-hover">
-            <p class="text-gray-400 text-sm">Today's Revenue</p>
+            <p class="text-sm">Today's Revenue</p>
             <h3 class="text-2xl font-semibold mt-1">RM 4,250</h3>
         </div>
         <div class="glass p-6 rounded-2xl card-hover">
-            <p class="text-gray-400 text-sm">Food Waste</p>
+            <p class="text-sm">Food Waste</p>
             <h3 class="text-2xl font-semibold mt-1">2.4 kg</h3>
         </div>
         <div class="glass p-6 rounded-2xl card-hover">
-            <p class="text-gray-400 text-sm">Money Saved</p>
+            <p class="text-sm">Money Saved</p>
             <h3 class="text-2xl font-semibold mt-1">RM 890</h3>
         </div>
         <div class="glass p-6 rounded-2xl card-hover">
-            <p class="text-gray-400 text-sm">Carbon Saved</p>
+            <p class="text-sm">Carbon Saved</p>
             <h3 class="text-2xl font-semibold mt-1">12 kg</h3>
         </div>
     </div>
@@ -95,7 +95,7 @@
             <h2 class="text-lg font-semibold mb-6">7-Day Demand Forecast</h2>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
-                    <thead class="text-gray-400 border-b border-white/10">
+                    <thead class="border-b border-white/10">
                         <tr><th class="pb-3">Date</th><th class="pb-3">Sales</th><th class="pb-3">Confidence</th></tr>
                     </thead>
                     <tbody class="divide-y divide-white/5">
