@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SmartKitchen AI | Settings</title>
+
+
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+
+
+        body{
+
+            font-family:'Inter',sans-serif;
+
+            background:#E8E1D4;
+
+            color:#fff;
+
+        }
+
+
+
+        .glass{
+
+            background:#2E5E4E;
+
+            backdrop-filter:blur(12px);
+
+            border:1px solid rgba(255,255,255,.08);
+
+        }
+
+
+
+        input,
+
+        select{
+
+            background:#2D2D2D;
+
+            border:1px solid rgba(255,255,255,.1);
+
+            color:white;
+
+        }
+
+
+        /* Dark Mode Colors (Your Deep Green Aesthetic) */
+body.dark-mode {
+    background: #2E5E4E;
+    color: #fff;
+}
+body.dark-mode .glass {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Light Mode Colors (Your Sand/Beige Aesthetic) */
+body.light-mode {
+    background: #E8E1D4;
+    color: #1f2937; /* Dark text so it's readable */
+}
+body.light-mode .glass {
+    background: rgba(255, 255, 255, 0.6); /* Brighter glass effect */
+}
+
+    </style>
+
+</head>
+
+
+
+<body class="p-8">
+
+
+
+<nav class="flex justify-between items-center py-6 px-8 glass mb-8 rounded-2xl mx-auto max-w-6xl mt-4">
+
+
+
+    <div class="font-bold text-xl">
+
+        SmartKitchen AI
+
+    </div>
+
+
+
+    <div class="flex gap-6 text-sm text-gray-300">
+
+        <a href="dashboard.html" class="hover:text-white">Dashboard</a>
+
+        <a href="inventory.html" class="hover:text-white">Inventory</a>
+
+        <a href="waste.html" class="hover:text-white">Waste</a>
+
+        <a href="aidecision.html" class="hover:text-white">AI Engine</a>
+
+        <a href="purchasing.html" class="hover:text-white">Purchasing</a>
+
+        <a href="reports.html" class="hover:text-white">Reports</a>
+
+        <a href="settings.html" class="text-white font-semibold">Settings</a>
+
+    </div>
+
+
+
+    <a href="loginpage.html"
+
+       class="text-xs bg-white/10 px-4 py-2 rounded-full hover:bg-white/20">
+
+        Sign Out
+
+    </a>
+
+
+
+</nav>
+
+
+
+<div class="max-w-4xl mx-auto">
+
+
+
+    <header class="mb-10">
+
+        <h1 class="text-3xl font-bold">
+
+            Settings
+
+        </h1>
+
+
+
+        <p class="text-black">
+
+            Configure your kitchen's digital ecosystem.
+
+        </p>
+
+    </header>
+
+
+
+    <div class="space-y-8">
+
+
+
+        <!-- Business Profile -->
+
+
+
+        <div class="glass p-8 rounded-3xl">
+
+
+
+            <h2 class="text-lg font-semibold mb-6">
+
+                Business Profile
+
+            </h2>
+
+
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+
+
+                <div>
+
+
+
+                    <label class="text-sm text-gray-300 block mb-2">
+
+                        Restaurant Name
+
+                    </label>
+
+
+
+                    <input
+
+                        id="restaurantName"
+
+                        type="text"
+
+                        placeholder="Enter restaurant name"
+
+                        class="w-full p-3 rounded-xl outline-none focus:border-blue-500">
+
+
+
+                </div>
+
+
+
+                <div>
+
+
+
+                    <label class="text-sm text-gray-300 block mb-2">
+
+                        Operating Hours
+
+                    </label>
+
+
+
+                    <input
+
+                        id="businessHours"
+
+                        type="text"
+
+                        placeholder="Example: 08:00 AM - 10:00 PM"
+
+                        class="w-full p-3 rounded-xl outline-none focus:border-blue-500">
+
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+        <!-- AI Settings -->
+
+
+
+        <div class="glass p-8 rounded-3xl">
+
+
+
+            <h2 class="text-lg font-semibold mb-6">
+
+                AI Optimization Settings
+
+            </h2>
+
+
+
+            <div class="flex items-center justify-between p-4 border-b border-white/10">
+
+
+
+                <div>
+
+
+
+                    <p class="font-medium">
+
+                        Auto-Purchasing
+
+                    </p>
+
+
+
+                    <p class="text-sm text-gray-400">
+
+                        Let AI place orders when stock reaches threshold.
+
+                    </p>
+
+
+
+                </div>
+
+
+
+                <input
+
+                    type="checkbox"
+
+                    checked
+
+                    class="w-5 h-5 accent-green-500">
+
+
+
+            </div>
+
+
+
+            <div class="flex items-center justify-between p-4">
+
+
+
+                <div>
+
+
+
+                    <p class="font-medium">
+
+                        Predictive Waste Alert
+
+                    </p>
+
+
+
+                    <p class="text-sm text-gray-400">
+
+                        Notify staff 24h before potential expiration.
+
+                    </p>
+
+
+
+                </div>
+
+
+
+                <input
+
+                    type="checkbox"
+
+                    checked
+
+                    class="w-5 h-5 accent-green-500">
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+        <!-- Appearance -->
+
+
+
+
+
+
+<script>
+
+
+
+// Load saved settings
+
+window.onload = function(){
+
+
+
+    const restaurantName = localStorage.getItem("restaurantName");
+
+    const businessHours = localStorage.getItem("businessHours");
+
+
+
+    if(restaurantName){
+
+        document.getElementById("restaurantName").value = restaurantName;
+
+    }
+
+
+
+    if(businessHours){
+
+        document.getElementById("businessHours").value = businessHours;
+
+    }
+
+
+
+};
+
+
+
+
+
+// Save settings
+
+document.getElementById("saveBtn").addEventListener("click",function(){
+
+
+
+    const restaurantName =
+
+        document.getElementById("restaurantName").value;
+
+
+
+    const businessHours =
+
+        document.getElementById("businessHours").value;
+
+
+
+    localStorage.setItem("restaurantName",restaurantName);
+
+    localStorage.setItem("businessHours",businessHours);
+
+
+
+    alert("Settings saved successfully!");
+
+
+
+});
+
+
+
+</script>
+
+
+
+</body>
+
+</html>
+
+
+
