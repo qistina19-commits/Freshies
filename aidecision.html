@@ -38,12 +38,18 @@
                 <h2 class="text-lg font-semibold mb-6">Simulation Controls</h2>
                 <div class="space-y-6">
                     <div>
+                        <label class="text-xs uppercase">Location</label>
+                        <div class="flex gap-2 mt-2">
+                            <input id="location" type="text" placeholder="e.g., Kuala Lumpur" class="flex-1 bg-black border border-white/10 p-3 rounded-xl text-white placeholder-gray-500" value="Kuala Lumpur">
+                            <button onclick="updateLocation()" class="bg-blue-500/30 hover:bg-blue-500/50 px-4 py-2 rounded-xl transition">Set</button>
+                        </div>
+                        <p id="locationDisplay" class="text-xs text-gray-400 mt-2">📍 Detecting location...</p>
+                    </div>
+                    <div>
                         <label class="text-xs uppercase">Tomorrow Weather</label>
-                        <select id="weather" onchange="runSimulation()" class="w-full mt-2 bg-black border border-white/10 p-3 rounded-xl">
-                            <option value="Sunny">Sunny</option>
-                            <option value="Rain">Rain</option>
-                            <option value="Cloudy">Cloudy</option>
-                        </select>
+                        <div id="weatherDisplay" class="w-full mt-2 bg-black border border-white/10 p-3 rounded-xl flex items-center gap-2">
+                            <span id="weatherStatus">Loading...</span>
+                        </div>
                     </div>
                     <div>
                         <label class="text-xs uppercase">Day Type</label>
@@ -72,23 +78,161 @@
                         <h3 id="savings" class="text-3xl font-bold mt-2 text-green-400">RM 0</h3>
                     </div>
                 </div>
+
+                <div class="glass p-6 rounded-3xl">
+                    <p class="text-sm mb-3">Weather Details</p>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div>
+                            <p class="text-xs text-gray-300">Temperature</p>
+                            <p id="temperature" class="text-xl font-bold">--°C</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-300">Humidity</p>
+                            <p id="humidity" class="text-xl font-bold">--%</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-300">Wind Speed</p>
+                            <p id="windSpeed" class="text-xl font-bold">-- km/h</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        function runSimulation() {
-            const weather = document.getElementById('weather').value;
-            const dayType = document.getElementById('dayType').value;
-            
-            // Simulation Logic (Fake AI Model)
-            let revenue = (dayType === 'Weekend' ? 8000 : 4000);
-            if (weather === 'Rain') revenue *= 0.7;
-            
-            const insight = weather === 'Rain' 
-                ? "Rain detected. Coffee demand increases by 18%, while cold drinks drop by 20%. Prepare more hot beverages."
-                : "Sunny conditions projected. High demand for cold drinks and salads. Adjust staffing to peak hours.";
+        let currentWeatherData = null;
+        let userLocation = 'Kuala Lumpur';
+
+        // Fetch real weather data from Open-Meteo API (free, no API key required)
+        async function fetchWeather(location) {
+            try {
+                // First, geocode the location to get coordinates
+                const geoResponse = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${location}&count=1&language=en&format=json`);
+                const geoData = await geoResponse.json();
                 
+                if (!geoData.results || geoData.results.length === 0) {
+                    document.getElementById('locationDisplay').innerText = '❌ Location not found. Using default.';
+                    return false;
+                }
+                
+                const place = geoData.results[0];
+                const { latitude, longitude, name, country } = place;
+                
+                // Fetch weather data
+                const weatherResponse = await fetch(
+                    `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=weathercode,temperature_2m_max,temperature_2m_min,relative_humidity_2m_max,windspeed_10m_max&timezone=auto`
+                );
+                const weatherData = await weatherResponse.json();
+                
+                // Get tomorrow's forecast (index 1)
+                const tomorrow = weatherData.daily;
+                const weatherCode = tomorrow.weathercode[1];
+                const maxTemp = tomorrow.temperature_2m_max[1];
+                const minTemp = tomorrow.temperature_2m_min[1];
+                const humidity = tomorrow.relative_humidity_2m_max[1];
+                const windSpeed = tomorrow.windspeed_10m_max[1];
+                
+                currentWeatherData = {
+                    location: `${name}, ${country}`,
+                    weatherCode,
+                    maxTemp,
+                    minTemp,
+                    humidity,
+                    windSpeed,
+                    condition: interpretWeatherCode(weatherCode)
+                };
+                
+                updateWeatherDisplay();
+                document.getElementById('locationDisplay').innerText = `📍 ${currentWeatherData.location}`;
+                
+                return true;
+            } catch (error) {
+                console.error('Weather fetch error:', error);
+                document.getElementById('locationDisplay').innerText = '⚠️ Unable to fetch weather data';
+                return false;
+            }
+        }
+
+        // Interpret WMO weather codes to human-readable conditions
+        function interpretWeatherCode(code) {
+            if (code === 0 || code === 1) return 'Sunny';
+            if (code === 2 || code === 3) return 'Cloudy';
+            if (code === 45 || code === 48) return 'Foggy';
+            if (code >= 51 && code <= 67) return 'Drizzle';
+            if (code >= 71 && code <= 77) return 'Snow';
+            if (code >= 80 && code <= 82) return 'Rain';
+            if (code >= 85 && code <= 86) return 'Snow Shower';
+            if (code === 95 || code === 96 || code === 99) return 'Thunderstorm';
+            return 'Cloudy';
+        }
+
+        function updateWeatherDisplay() {
+            if (currentWeatherData) {
+                document.getElementById('weatherStatus').innerText = `${currentWeatherData.condition} (${currentWeatherData.maxTemp}°C)`;
+                document.getElementById('temperature').innerText = `${currentWeatherData.maxTemp}°C`;
+                document.getElementById('humidity').innerText = `${currentWeatherData.humidity}%`;
+                document.getElementById('windSpeed').innerText = `${currentWeatherData.windSpeed} km/h`;
+                runSimulation();
+            }
+        }
+
+        async function updateLocation() {
+            const location = document.getElementById('location').value.trim();
+            if (location) {
+                userLocation = location;
+                document.getElementById('locationDisplay').innerText = '📍 Loading weather...';
+                await fetchWeather(location);
+            }
+        }
+
+        function runSimulation() {
+            if (!currentWeatherData) {
+                document.getElementById('aiInsight').innerText = 'Loading weather data...';
+                return;
+            }
+
+            const dayType = document.getElementById('dayType').value;
+            const weather = currentWeatherData.condition;
+            
+            // Simulation Logic based on real weather
+            let revenue = (dayType === 'Weekend' ? 8000 : 4000);
+            
+            // Weather-based revenue adjustments
+            if (weather === 'Rain' || weather === 'Drizzle') {
+                revenue *= 0.7;
+            } else if (weather === 'Sunny') {
+                revenue *= 1.2;
+            } else if (weather === 'Thunderstorm') {
+                revenue *= 0.5;
+            }
+            
+            // Temperature-based adjustments
+            const temp = currentWeatherData.maxTemp;
+            if (temp > 32) {
+                revenue *= 1.1; // Hot weather = more cold drinks
+            } else if (temp < 15) {
+                revenue *= 0.9; // Cold weather = less demand
+            }
+            
+            // Generate dynamic insight
+            let insight = '';
+            if (weather === 'Rain' || weather === 'Drizzle') {
+                insight = `🌧️ Rain predicted. Coffee demand increases by 18%, while cold drinks drop by 20%. Prepare more hot beverages and soups.`;
+            } else if (weather === 'Sunny') {
+                insight = `☀️ Sunny conditions projected. High demand for cold drinks and salads. Adjust staffing to peak hours.`;
+            } else if (weather === 'Thunderstorm') {
+                insight = `⛈️ Thunderstorm warning! Expect lower foot traffic. Focus on delivery orders and prepare comfort foods.`;
+            } else if (weather === 'Cloudy') {
+                insight = `☁️ Cloudy weather expected. Moderate demand. Consider promotional offers to boost sales.`;
+            } else if (weather === 'Foggy') {
+                insight = `🌫️ Foggy conditions. Reduced visibility may lower foot traffic. Enhance outdoor signage and promotions.`;
+            }
+            
+            if (dayType === 'Holiday') {
+                insight += ' (Holiday surge expected)';
+            }
+            
             document.getElementById('revenue').innerText = `RM ${Math.floor(revenue).toLocaleString()}`;
             document.getElementById('savings').innerText = `RM ${Math.floor(revenue * 0.15).toLocaleString()}`;
             document.getElementById('aiInsight').innerText = insight;
@@ -98,8 +242,41 @@
             setTimeout(() => document.getElementById('revenue').classList.remove('animate-pulse'), 500);
         }
 
-        // Initialize on load
-        runSimulation();
+        // Initialize on load with geolocation or default location
+        async function initialize() {
+            // Try browser geolocation first
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        const { latitude, longitude } = position.coords;
+                        try {
+                            const response = await fetch(
+                                `https://geocoding-api.open-meteo.com/v1/search?latitude=${latitude}&longitude=${longitude}&count=1&language=en&format=json`
+                            );
+                            const data = await response.json();
+                            if (data.results && data.results.length > 0) {
+                                userLocation = data.results[0].name;
+                                document.getElementById('location').value = userLocation;
+                                await fetchWeather(userLocation);
+                            } else {
+                                await fetchWeather('Kuala Lumpur');
+                            }
+                        } catch (error) {
+                            await fetchWeather('Kuala Lumpur');
+                        }
+                    },
+                    () => {
+                        // Geolocation failed, use default
+                        fetchWeather('Kuala Lumpur');
+                    }
+                );
+            } else {
+                // Geolocation not supported, use default
+                await fetchWeather('Kuala Lumpur');
+            }
+        }
+
+        initialize();
     </script>
 </body>
 </html>
