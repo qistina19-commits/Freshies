@@ -22,60 +22,31 @@
 
 
 
-        body{
-
-            font-family:'Inter',sans-serif;
-
-            background:#E8E1D4;
-
-            color:#fff;
-
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #2e5e4e;
+            color: #1f1f1f;
         }
 
 
 
-        .glass{
-
-            background:#2E5E4E;
-
-            backdrop-filter:blur(12px);
-
-            border:1px solid rgba(255,255,255,.08);
-
+        .glass {
+            background: rgba(245, 238, 226, 0.95);
+            color: #1f1f1f;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(196, 162, 131, 0.4);
         }
 
 
 
         input,
-
-        select{
-
-            background:#2D2D2D;
-
-            border:1px solid rgba(255,255,255,.1);
-
-            color:white;
-
+        select {
+            background: rgba(255,255,255,0.85);
+            border: 1px solid rgba(196, 162, 131, 0.4);
+            color: #1f1f1f;
         }
 
-
-        /* Dark Mode Colors (Your Deep Green Aesthetic) */
-body.dark-mode {
-    background: #2E5E4E;
-    color: #fff;
-}
-body.dark-mode .glass {
-    background: rgba(255, 255, 255, 0.05);
-}
-
-/* Light Mode Colors (Your Sand/Beige Aesthetic) */
-body.light-mode {
-    background: #E8E1D4;
-    color: #1f2937; /* Dark text so it's readable */
-}
-body.light-mode .glass {
-    background: rgba(255, 255, 255, 0.6); /* Brighter glass effect */
-}
+        .row-hover:hover { background: rgba(220, 210, 195, 0.95); }
 
     </style>
 
@@ -96,23 +67,16 @@ body.light-mode .glass {
 
 
 
-    <div class="flex gap-6 text-sm text-gray-300">
 
-        <a href="dashboard.html" class="hover:text-white">Dashboard</a>
-
-        <a href="inventory.html" class="hover:text-white">Inventory</a>
-
-        <a href="waste.html" class="hover:text-white">Waste</a>
-
-        <a href="aidecision.html" class="hover:text-white">AI Engine</a>
-
-        <a href="purchasing.html" class="hover:text-white">Purchasing</a>
-
-        <a href="reports.html" class="hover:text-white">Reports</a>
-
-        <a href="settings.html" class="text-white font-semibold">Settings</a>
-
-    </div>
+  <div class="flex gap-6 text-sm text-gray-600">
+    <a href="dashboard.html" class="hover:text-gray-900 transition">Dashboard</a>
+    <a href="inventory.html" class="hover:text-gray-900 transition">Inventory</a>
+    <a href="waste.html" class="hover:text-gray-900 transition">Waste</a>
+    <a href="aidecision.html" class="hover:text-gray-900 transition">AI Engine</a>
+    <a href="purchasing.html" class="hover:text-gray-900 transition">Purchasing</a>
+    <a href="reports.html" class="hover:text-gray-900 transition">Reports</a>
+    <a href="settings.html" class="font-semibold text-gray-900">Settings</a>
+  </div>
 
 
 
@@ -140,7 +104,7 @@ body.light-mode .glass {
 
     <header class="mb-10">
 
-        <h1 class="text-3xl font-bold">
+        <h1 class="text-3xl font-bold text-white">
 
             Settings
 
@@ -148,7 +112,7 @@ body.light-mode .glass {
 
 
 
-        <p class="text-black">
+        <p class="text-white">
 
             Configure your kitchen's digital ecosystem.
 
@@ -186,7 +150,7 @@ body.light-mode .glass {
 
 
 
-                    <label class="text-sm text-gray-300 block mb-2">
+                    <label class="text-sm text-gray-700 block mb-2">
 
                         Restaurant Name
 
@@ -214,7 +178,7 @@ body.light-mode .glass {
 
 
 
-                    <label class="text-sm text-gray-300 block mb-2">
+                    <label class="text-sm text-gray-700 block mb-2">
 
                         Operating Hours
 
@@ -262,7 +226,7 @@ body.light-mode .glass {
 
 
 
-            <div class="flex items-center justify-between p-4 border-b border-white/10">
+            <div class="flex items-center justify-between p-4 border-b border-gray-300">
 
 
 
@@ -270,7 +234,7 @@ body.light-mode .glass {
 
 
 
-                    <p class="font-medium">
+                    <p class="font-medium text-gray-900">
 
                         Auto-Purchasing
 
@@ -278,7 +242,7 @@ body.light-mode .glass {
 
 
 
-                    <p class="text-sm text-gray-400">
+                    <p class="text-sm text-gray-600">
 
                         Let AI place orders when stock reaches threshold.
 
@@ -312,7 +276,7 @@ body.light-mode .glass {
 
 
 
-                    <p class="font-medium">
+                    <p class="font-medium text-gray-900">
 
                         Predictive Waste Alert
 
@@ -320,7 +284,7 @@ body.light-mode .glass {
 
 
 
-                    <p class="text-sm text-gray-400">
+                    <p class="text-sm text-gray-600">
 
                         Notify staff 24h before potential expiration.
 
@@ -351,8 +315,6 @@ body.light-mode .glass {
 
 
         <!-- Appearance -->
-
-
 
 
 
@@ -434,6 +396,3 @@ document.getElementById("saveBtn").addEventListener("click",function(){
 </body>
 
 </html>
-
-
-
