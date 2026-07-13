@@ -7,57 +7,55 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
-        body { font-family: 'Inter', sans-serif; background: #E8E1D4; color: #fff; }
-        .glass { background:#2E5E4E; backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.08
-); }
+        body { font-family: 'Inter', sans-serif; background: #2e5e4e; color: #1f1f1f; }
+        .glass { background: rgba(245, 238, 226, 0.95); color: #1f1f1f; backdrop-filter: blur(12px); border: 1px solid rgba(196, 162, 131, 0.4); }
+        .row-hover:hover { background: rgba(220, 210, 195, 0.95); }
     </style>
 </head>
 <body class="p-8">
     <nav class="flex justify-between items-center py-6 px-8 glass mb-8 rounded-2xl mx-auto max-w-6xl mt-4">
     <div class="font-bold text-xl">SmartKitchen AI</div>
-    <div class="flex gap-6 text-sm text-gray-400">
-        <a href="dashboard.html" class="hover:text-white">Dashboard</a>
-        <a href="inventory.html" class="hover:text-white">Inventory</a>
-        <a href="waste.html" class="hover:text-white">Waste</a>
-        <a href="aidecision.html" class="hover:text-white">AI Engine</a>
-        <a href="purchasing.html" class="hover:text-white">Purchasing</a>
-        <a href="reports.html" class="hover:text-white">Reports</a>
-        <a href="settings.html" class="hover:text-white">Settings</a>
+    <div class="flex gap-6 text-sm text-gray-600">
+        <a href="dashboard.html" class="hover:text-gray-900 transition">Dashboard</a>
+        <a href="inventory.html" class="hover:text-gray-900 transition">Inventory</a>
+        <a href="waste.html" class="font-semibold text-gray-900">Waste</a>
+        <a href="aidecision.html" class="hover:text-gray-900 transition">AI Engine</a>
+        <a href="purchasing.html" class="hover:text-gray-900 transition">Purchasing</a>
+        <a href="reports.html" class="hover:text-gray-900 transition">Reports</a>
+        <a href="settings.html" class="hover:text-gray-900 transition">Settings</a>
     </div>
-    <a href="loginpage.html" class="text-xs bg-white/10 px-4 py-2 rounded-full hover:bg-white/20">Sign Out</a>
+    <a href="loginpage.html" class="text-xs bg-white/10 px-4 py-2 rounded-full hover:bg-white/20 transition text-gray-700">Sign Out</a>
 </nav>
-
-   
 
     <div class="max-w-6xl mx-auto">
         <header class="mb-8">
             <h1 class="text-3xl font-bold">Waste Management</h1>
-            <p class="text-black">Track and optimize resource consumption</p>
+            <p class="text-gray-700">Track and optimize resource consumption</p>
         </header>
 
-        <div class="glass p-6 rounded-3xl border border-red-500/40 bg-red-600/50 mb-8 backdrop-blur-md">
-    <h2 class="text-lg font-semibold text-red-200 mb-2">⚠️ AI Waste Alert</h2>
-    <p class="text-white font-medium">Burger waste increased by 18% this week.</p>
-    <p class="text-sm text-red-100 mt-2">Recommendation: Reduce prep by 8 servings to save <b>RM 65</b> per day.</p>
+        <div class="glass p-6 rounded-3xl border border-red-500/40 bg-red-600/10 mb-8 backdrop-blur-md">
+    <h2 class="text-lg font-semibold text-red-700 mb-2">⚠️ AI Waste Alert</h2>
+    <p class="text-gray-800 font-medium">Burger waste increased by 18% this week.</p>
+    <p class="text-sm text-red-700 mt-2">Recommendation: Reduce prep by 8 servings to save <b>RM 65</b> per day.</p>
 </div>
 
         <div class="glass p-6 rounded-3xl mb-8">
             <h3 class="text-lg font-semibold mb-4">Record New Waste</h3>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <input id="foodName" type="text" placeholder="Food Item" class="bg-white/5 border border-white/10 p-3 rounded-xl">
-                <input id="quantity" type="number" placeholder="Quantity (kg)" class="bg-white/5 border border-white/10 p-3 rounded-xl">
-                <select id="reason" class="bg-white/5 border border-white/10 p-3 rounded-xl">
-                    <option>Spoilage</option>
-                    <option>Over-prep</option>
-                    <option>Customer Return</option>
+                <input id="foodName" type="text" placeholder="Food Item" class="bg-white/20 border border-gray-400/30 p-3 rounded-xl text-gray-800 placeholder-gray-600">
+                <input id="quantity" type="number" placeholder="Quantity (kg)" class="bg-white/20 border border-gray-400/30 p-3 rounded-xl text-gray-800 placeholder-gray-600">
+                <select id="reason" class="bg-white/20 border border-gray-400/30 p-3 rounded-xl text-gray-800">
+                    <option class="text-gray-800">Spoilage</option>
+                    <option class="text-gray-800">Over-prep</option>
+                    <option class="text-gray-800">Customer Return</option>
                 </select>
-                <button onclick="recordWaste()" class="bg-white text-black font-semibold rounded-xl hover:bg-gray-200">Record</button>
+                <button onclick="recordWaste()" class="bg-black text-white font-semibold rounded-xl hover:bg-gray-900 transition">Record</button>
             </div>
         </div>
 
         <div class="glass rounded-3xl overflow-hidden">
             <table class="w-full text-left">
-                <thead class="bg-white/5 text-gray-400 text-sm">
+                <thead class="bg-white/5 text-gray-600 text-sm">
                     <tr>
                         <th class="p-6">Item</th>
                         <th class="p-6">Quantity</th>
@@ -83,12 +81,14 @@
             wasteLogs.unshift({ name, qty, reason, cost: (qty * 12.5).toFixed(2) });
             localStorage.setItem('wasteData', JSON.stringify(wasteLogs));
             renderWaste();
+            document.getElementById('foodName').value = '';
+            document.getElementById('quantity').value = '';
         }
 
         function renderWaste() {
             const body = document.getElementById('wasteBody');
             body.innerHTML = wasteLogs.map(item => `
-                <tr class="hover:bg-white/5">
+                <tr class="row-hover">
                     <td class="p-6">${item.name}</td>
                     <td class="p-6">${item.qty} kg</td>
                     <td class="p-6">${item.reason}</td>
